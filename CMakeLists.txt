@@ -88,6 +88,9 @@ juce_add_plugin("${PROJECT_NAME}"
 # Without running into ODR violations
 add_library(SharedCode INTERFACE)
 
+# define this plugin as a synthesizer
+target_compile_definitions(SharedCode INTERFACE JucePlugin_IsSynth=1)
+
 clap_juce_extensions_plugin(TARGET "${PROJECT_NAME}"
     CLAP_ID "${BUNDLE_ID}"
     CLAP_FEATURES audio-effect)
