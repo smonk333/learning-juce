@@ -15,7 +15,7 @@ TEST_CASE ("Plugin instance", "[instance]")
     SECTION ("name")
     {
         CHECK_THAT (testPlugin.getName().toStdString(),
-            Catch::Matchers::Equals ("Pamplejuce Demo"));
+            Catch::Matchers::Equals ("smokeSynth"));
     }
 }
 
@@ -25,6 +25,6 @@ TEST_CASE ("Plugin instance", "[instance]")
 
 TEST_CASE ("IPP version", "[ipp]")
 {
-    CHECK_THAT (ippsGetLibVersion()->Version, Catch::Matchers::Equals ("2022.0.0 (r0x131e93b0)"));
+    CHECK_THAT (ippsGetLibVersion()->Version, Catch::Matchers::Equals ("2022.1.0 (r0xc8d62893)"));
 }
 #endif
