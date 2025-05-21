@@ -149,6 +149,48 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         juce::ignoreUnused (channelData);
         // ..do something to the data...
     }
+
+    // handle midi messages
+    for (const auto metadata : midiMessages) {
+        const auto msg = metadata.getMessage();
+        if (msg.isNoteOn()) {
+            // find a free voice or steal the oldest one
+            auto it = std::find_if(voices.begin(), voices.end(),
+                [](const Voice& v) {
+                    return !v.active;
+                });
+            if (it == voices.end() && voices.size() < maxVoices) {
+                voices.push_back({});
+                it = std::prev(voices.end());
+            }
+            if (it != voices.end()) {
+                it->midiNote = msg.getNoteNumber();
+                double freq = juce::MidiMessage::getMidiNoteInHertz(it->midiNote);
+                it->angleDelta = 2.0 * juce::MathConstants<double>::pi * freq / getSampleRate();
+                it->currentAngle = 0.0;
+                it->level = 0.2f;
+                it->active = true;
+            }
+        } else if (msg.isNoteOff()) {
+            for (auto& v : voices) {
+                if (v.active && v.midiNote == msg.getNoteNumber())
+                    v.active = false;
+            }
+        }
+    }
+
+    // render audio
+    for (int sample = 0; sample < buffer.getNumSamples(); ++sample) {
+        float value = 0.0f;
+        for (auto& v : voices) {
+            if (v.active) {
+                value += static_cast<float>(std::sin(v.currentAngle)) * v.level;
+                v.currentAngle += v.angleDelta;
+            }
+        }
+        for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+            buffer.setSample(channel, sample, value);
+    }
 }
 
 //==============================================================================
