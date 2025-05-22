@@ -164,11 +164,12 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 it = std::prev(voices.end());
             }
             if (it != voices.end()) {
+                int velocity = msg.getVelocity();
                 it->midiNote = msg.getNoteNumber();
                 double freq = juce::MidiMessage::getMidiNoteInHertz(it->midiNote);
                 it->angleDelta = 2.0 * juce::MathConstants<double>::pi * freq / getSampleRate();
                 it->currentAngle = 0.0;
-                it->level = 0.2f;
+                it->level = 0.2f * (static_cast<float>(velocity) / 127.0f);
                 it->active = true;
             }
         } else if (msg.isNoteOff()) {
@@ -179,6 +180,10 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         }
     }
 
+    int activeVoices = 0;
+    for (const auto& v : voices)
+        if (v.active) ++activeVoices;
+
     // render audio
     for (int sample = 0; sample < buffer.getNumSamples(); ++sample) {
         float value = 0.0f;
@@ -188,6 +193,9 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 v.currentAngle += v.angleDelta;
             }
         }
+        // normalize to avoid clipping
+        if (activeVoices > 0)
+            value /= static_cast<float>(activeVoices);
         for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
             buffer.setSample(channel, sample, value);
     }
