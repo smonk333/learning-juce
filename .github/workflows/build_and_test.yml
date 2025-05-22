@@ -151,6 +151,7 @@ jobs:
           dev-id-app-password: ${{ secrets.DEV_ID_APP_PASSWORD }}
           dev-id-installer-cert: ${{ secrets.DEV_ID_INSTALLER_CERT }}
           dev-id-installer-password: ${{ secrets.DEV_ID_INSTALLER_PASSWORD }}
+        continue-on-error: true
 
       - name: Codesign (macOS)
         if: ${{ matrix.name == 'macOS' }}
