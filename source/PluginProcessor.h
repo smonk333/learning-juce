@@ -40,19 +40,23 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    // double currentAngle = 0.0, angleDelta = 0.0;
-    // int lastMidiNote = -1;
-    // float level = 0.0f;
+    //==============================================================================
+    // commented out for testing
+    //==============================================================================
 
-    struct Voice {
-        int midiNote = -1;
-        double currentAngle = 0.0, angleDelta = 0.0;
-        float level = 0.0f;
-        bool active = false;
-    };
-
-    std::vector<Voice> voices;
-    const int maxVoices = 16;
+    // // double currentAngle = 0.0, angleDelta = 0.0;
+    // // int lastMidiNote = -1;
+    // // float level = 0.0f;
+    //
+    // struct Voice {
+    //     int midiNote = -1;
+    //     double currentAngle = 0.0, angleDelta = 0.0;
+    //     float level = 0.0f;
+    //     bool active = false;
+    // };
+    //
+    // std::vector<Voice> voices;
+    // const int maxVoices = 16;
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
