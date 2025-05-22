@@ -3,6 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
 
+
 #if (MSVC)
 #include "ipps.h"
 #endif
@@ -39,9 +40,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    double currentAngle = 0.0, angleDelta = 0.0;
-    int lastMidiNote = -1;
-    float level = 0.0f;
+    // double currentAngle = 0.0, angleDelta = 0.0;
+    // int lastMidiNote = -1;
+    // float level = 0.0f;
 
     struct Voice {
         int midiNote = -1;
