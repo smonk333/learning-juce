@@ -22,6 +22,7 @@ struct SineWaveVoice : public juce::SynthesiserVoice
 
     void startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound*, int) override
     {
+        DBG("Midi note received");
         currentAngle = 0.0;
         level = velocity * 0.15;
         tailOff = 0.0;
@@ -33,6 +34,7 @@ struct SineWaveVoice : public juce::SynthesiserVoice
 
     void stopNote (float, bool allowTailOff) override
     {
+        DBG("MIDI note stopped");
         if (allowTailOff && tailOff == 0.0)
             tailOff = 1.0;
         else
